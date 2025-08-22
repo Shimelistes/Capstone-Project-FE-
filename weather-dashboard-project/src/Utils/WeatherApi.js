@@ -1,11 +1,8 @@
-const API_KEY = 'c232a87c970615d928dbecc3603acb90';
-const BASE_URL = 'https://api.openweathermap.org/data/2.5';
-
+import { useState, useEffect } from 'react';
 export const fetchWeatherData = async (city, units = 'metric') => {
-  const url = `${BASE_URL}/weather?q=${city}&appid=${API_KEY}&units=${units}`;
-  
+  const OPEN_WEATHER_API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
   try {
-    const response = await fetch(url);
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPEN_WEATHER_API_KEY}&units=metric`);
     
     if (!response.ok) {
       if (response.status === 404) {
