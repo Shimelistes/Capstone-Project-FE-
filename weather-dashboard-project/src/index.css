@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Light theme styles */
+.light-theme {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.light-theme .bg-white\/10 {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.light-theme .bg-white\/20 {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.light-theme .text-white {
+  color: #ffffff;
+}
+
+.light-theme .text-white\/60 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.light-theme .text-white\/70 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.light-theme .text-white\/80 {
+  color: rgba(255, 255, 255, 0.9);
+}
