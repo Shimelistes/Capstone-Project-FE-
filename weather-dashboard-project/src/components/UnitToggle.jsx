@@ -1,5 +1,4 @@
 import React from 'react';
-import { Thermometer } from 'lucide-react';
 
 const UnitToggle = ({ units, onToggle }) => {
   return (
@@ -9,9 +8,7 @@ const UnitToggle = ({ units, onToggle }) => {
           <button
             onClick={() => onToggle('metric')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-              units === 'metric'
-                ? 'bg-white text-gray-800 shadow-lg'
-                : 'text-white hover:bg-white/10'
+              units === 'metric' ? 'bg-white text-gray-800 shadow-lg' : 'text-white hover:bg-white/10'
             }`}
           >
             °C
@@ -19,9 +16,7 @@ const UnitToggle = ({ units, onToggle }) => {
           <button
             onClick={() => onToggle('imperial')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-              units === 'imperial'
-                ? 'bg-white text-gray-800 shadow-lg'
-                : 'text-white hover:bg-white/10'
+              units === 'imperial' ? 'bg-white text-gray-800 shadow-lg' : 'text-white hover:bg-white/10'
             }`}
           >
             °F

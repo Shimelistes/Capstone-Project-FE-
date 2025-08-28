@@ -2,8 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global body & transition */
+body {
+  @apply min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 transition-all duration-1000;
+}
 
-/* Light theme styles */
+/* Light theme overrides */
 .light-theme {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
@@ -11,7 +15,6 @@
 .light-theme .bg-white\/10 {
   background-color: rgba(255, 255, 255, 0.2);
 }
-
 .light-theme .bg-white\/20 {
   background-color: rgba(255, 255, 255, 0.3);
 }
@@ -19,15 +22,21 @@
 .light-theme .text-white {
   color: #ffffff;
 }
-
 .light-theme .text-white\/60 {
   color: rgba(255, 255, 255, 0.8);
 }
-
 .light-theme .text-white\/70 {
   color: rgba(255, 255, 255, 0.9);
 }
-
 .light-theme .text-white\/80 {
   color: rgba(255, 255, 255, 0.9);
 }
+
+/* Smooth background transitions for cards and buttons */
+.bg-white\/10,
+.bg-white\/20,
+.backdrop-blur-md,
+.backdrop-blur-sm {
+  transition: background-color 0.5s ease, backdrop-filter 0.5s ease;
+}
+

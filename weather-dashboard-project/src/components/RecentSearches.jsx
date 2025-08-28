@@ -2,6 +2,8 @@ import React from 'react';
 import { Clock } from 'lucide-react';
 
 const RecentSearches = ({ searches, onSelect }) => {
+  if (!searches.length) return null;
+
   return (
     <div className="mt-4 max-w-2xl mx-auto">
       <div className="flex items-center text-white/70 text-sm mb-2">
@@ -9,9 +11,9 @@ const RecentSearches = ({ searches, onSelect }) => {
         <span>Recent searches</span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {searches.map((city, index) => (
+        {searches.map((city, idx) => (
           <button
-            key={index}
+            key={idx}
             onClick={() => onSelect(city)}
             className="px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full border border-white/20 text-white text-sm transition-all duration-200 hover:scale-105"
           >

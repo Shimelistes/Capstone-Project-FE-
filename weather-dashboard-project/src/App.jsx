@@ -3,13 +3,13 @@ import WeatherCard from './components/WeatherCard';
 import ForecastCard from './components/ForecastCard';
 import SearchBar from './components/SearchBar';
 import RecentSearches from './components/RecentSearches';
-import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import UnitToggle from './components/UnitToggle';
 import LocationButton from './components/LocationButton';
 import ThemeToggle from './components/ThemeToggle';
 import WeatherAlerts from './components/WeatherAlerts';
 import { fetchWeatherData } from './Utils/WeatherApi';
+import { RotatingLines } from 'react-loader-spinner';
 
 function App() {
   const [weather, setWeather] = useState(null);
@@ -20,11 +20,10 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // ✅ Define handleSearch before using it in useEffect
+  // Handle search
   const handleSearch = useCallback(
     async (city) => {
       if (!city.trim()) return;
-
       setLoading(true);
       setError(null);
 
@@ -32,17 +31,20 @@ function App() {
         const weatherData = await fetchWeatherData(city, units);
         setWeather(weatherData);
 
-        // Update recent searches
-        const updatedSearches = [city, ...recentSearches.filter((s) => s !== city)].slice(0, 5);
-        setRecentSearches(updatedSearches);
-        localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+        // Functional update to prevent re-render loops
+        setRecentSearches(prev => {
+          const updated = [city, ...prev.filter(s => s !== city)].slice(0, 5);
+          localStorage.setItem('recentSearches', JSON.stringify(updated));
+          return updated;
+        });
+
       } catch (err) {
         setError(err?.message || 'Failed to fetch weather data');
       } finally {
         setLoading(false);
       }
     },
-    [units, recentSearches]
+    [units]
   );
 
   // Load saved settings on mount
@@ -56,11 +58,12 @@ function App() {
     if (savedUnits) setUnits(savedUnits);
   }, []);
 
-  // ✅ Now safe to call handleSearch here
+  // Fetch default city on mount
   useEffect(() => {
-    handleSearch('London');
+    handleSearch('Addis Ababa');
   }, [handleSearch]);
 
+  // Handle location button click
   const handleLocationClick = async () => {
     setLocationLoading(true);
     setError(null);
@@ -77,11 +80,13 @@ function App() {
       const weatherData = await fetchWeatherData(`${latitude},${longitude}`, units);
       setWeather(weatherData);
 
-      // Add to recent searches
       const cityName = weatherData.name;
-      const updatedSearches = [cityName, ...recentSearches.filter((s) => s !== cityName)].slice(0, 5);
-      setRecentSearches(updatedSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+      setRecentSearches(prev => {
+        const updated = [cityName, ...prev.filter(s => s !== cityName)].slice(0, 5);
+        localStorage.setItem('recentSearches', JSON.stringify(updated));
+        return updated;
+      });
+
     } catch (err) {
       const errorMessage =
         err?.code === 1
@@ -97,22 +102,22 @@ function App() {
     }
   };
 
+  // Toggle units
   const handleUnitToggle = (newUnits) => {
     setUnits(newUnits);
     localStorage.setItem('units', newUnits);
 
-    // Refetch data with new units if we have a current city
-    if (weather) {
-      handleSearch(weather.name);
-    }
+    if (weather) handleSearch(weather.name);
   };
 
+  // Toggle theme
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
 
+  // Background gradient based on weather
   const getBackgroundGradient = () => {
     if (!weather) return 'from-blue-400 to-blue-600';
 
@@ -129,23 +134,15 @@ function App() {
   };
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-1000 ${
-        theme === 'light' ? 'light-theme' : ''
-      }`}
-    >
+    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-1000 ${theme === 'light' ? 'light-theme' : ''}`}>
       <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
-              Weather Dashboard
-            </h1>
-            <p className="text-white/80 text-lg">
-              Get real-time weather information for any city worldwide
-            </p>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">Weather Dashboard</h1>
+            <p className="text-white/80 text-lg">Get real-time weather information for any city worldwide</p>
           </div>
 
           {/* Unit Toggle */}
@@ -157,14 +154,16 @@ function App() {
               <SearchBar onSearch={handleSearch} />
               <LocationButton onLocationClick={handleLocationClick} loading={locationLoading} />
             </div>
-            {recentSearches.length > 0 && (
-              <RecentSearches searches={recentSearches} onSelect={handleSearch} />
-            )}
+            {recentSearches.length > 0 && <RecentSearches searches={recentSearches} onSelect={handleSearch} />}
           </div>
 
           {/* Content */}
           <div className="space-y-6">
-            {loading && <LoadingSpinner />}
+            {loading && (
+              <div className="flex items-center justify-center">
+                <RotatingLines height="96" width="96" strokeColor="gray" strokeWidth="5" animationDuration="0.75" visible={true} />
+              </div>
+            )}
 
             {error && <ErrorMessage message={error} />}
 
@@ -172,6 +171,7 @@ function App() {
               <>
                 <WeatherAlerts alerts={weather.alerts} />
                 <WeatherCard weather={weather} units={units} />
+                <ForecastCard forecast={weather.forecast} units={units} />
               </>
             )}
           </div>
