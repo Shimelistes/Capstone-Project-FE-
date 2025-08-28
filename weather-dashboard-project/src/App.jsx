@@ -20,7 +20,7 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // Handle search
+  // Handle city search
   const handleSearch = useCallback(
     async (city) => {
       if (!city.trim()) return;
@@ -31,7 +31,7 @@ function App() {
         const weatherData = await fetchWeatherData(city, units);
         setWeather(weatherData);
 
-        // Functional update to prevent re-render loops
+        // Update recent searches
         setRecentSearches(prev => {
           const updated = [city, ...prev.filter(s => s !== city)].slice(0, 5);
           localStorage.setItem('recentSearches', JSON.stringify(updated));
@@ -47,7 +47,7 @@ function App() {
     [units]
   );
 
-  // Load saved settings on mount
+  // Load saved settings
   useEffect(() => {
     const savedSearches = localStorage.getItem('recentSearches');
     const savedTheme = localStorage.getItem('theme');
@@ -102,15 +102,14 @@ function App() {
     }
   };
 
-  // Toggle units
+  // Toggle units (°C / °F)
   const handleUnitToggle = (newUnits) => {
     setUnits(newUnits);
     localStorage.setItem('units', newUnits);
-
     if (weather) handleSearch(weather.name);
   };
 
-  // Toggle theme
+  // Toggle theme (light / dark)
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
@@ -139,9 +138,12 @@ function App() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
+
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">Weather Dashboard</h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
+              Weather Dashboard
+            </h1>
             <p className="text-white/80 text-lg">Get real-time weather information for any city worldwide</p>
           </div>
 
@@ -180,6 +182,7 @@ function App() {
           <div className="text-center mt-12 text-white/60">
             <p className="text-sm">Weather data provided by OpenWeatherMap</p>
           </div>
+
         </div>
       </div>
     </div>

@@ -22,7 +22,7 @@ const SearchBar = ({ onSearch }) => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for a city (e.g., London, New York)"
+          placeholder="Search for a city (e.g., Addis Ababa, Nairobi)"
           className="w-full pl-12 pr-6 py-4 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 text-lg transition-all duration-300"
         />
         <button

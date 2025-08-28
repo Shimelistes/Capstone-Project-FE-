@@ -4,209 +4,166 @@ A beautiful, responsive weather dashboard application built with React and Tailw
 
 ![Weather Dashboard](https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop)
 
-## Features
 
-- 🌤️ **Real-time Weather Data** - Get current weather conditions for any city
-- 🔍 **Smart Search** - Search for cities with an intuitive search interface
-- 📱 **Responsive Design** - Optimized for desktop, tablet, and mobile devices
-- 🎨 **Dynamic Backgrounds** - Background colors change based on weather conditions
-- 📊 **Comprehensive Weather Info** - Temperature, humidity, wind speed, pressure, visibility
-- 🕒 **Recent Searches** - Quick access to previously searched cities
-- ⏰ **Sunrise/Sunset Times** - View daily sun times for any location
-- 🌡️ **Temperature Range** - Daily high and low temperatures
-- 💨 **Weather Icons** - Visual weather condition indicators
-- ⚡ **Fast Loading** - Optimized performance with loading states
+Features
 
-## Tech Stack
+🌤️ Real-time Weather Data – Get current weather for any city
 
-- **Frontend**: React 18, JavaScript (ES6+)
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Build Tool**: Vite
-- **API**: OpenWeatherMap API
-- **Deployment**: Ready for Netlify, Vercel, or similar platforms
+🔍 Smart Search – Search for cities or use geolocation
 
-## Getting Started
+📱 Responsive Design – Works on desktop, tablet, and mobile
 
-### Prerequisites
+🎨 Dynamic Backgrounds – Background gradients change based on weather conditions
 
-- Node.js (version 16 or higher)
-- npm or yarn package manager
-- OpenWeatherMap API key (free registration required)
+📊 Comprehensive Weather Info – Temperature, feels-like, humidity, wind speed, pressure, visibility
 
-### Installation
+🕒 Recent Searches – Quick access to last 5 searches
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd weather-dashboard
-   ```
+⏰ Sunrise/Sunset Times – Daily sun times for any location
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+🌡️ Temperature Range – Daily high/low temperatures
 
-3. **Get your API key**
-   - Visit [OpenWeatherMap](https://openweathermap.org/api)
-   - Sign up for a free account
-   - Generate your API key
+⚡ Weather Alerts – Displayed if available
 
-4. **Configure the API**
-   - Open `src/utils/weatherApi.js`
-   - Replace `'demo'` with your actual API key
-   - Uncomment the production API function at the bottom of the file
+🌙 Dark/Light Theme Toggle – Switch themes dynamically
 
-5. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+💨 Unit Toggle – Switch between Celsius (°C) and Fahrenheit (°F)
 
-6. **Open your browser**
-   - Navigate to `http://localhost:5173`
-   - Start searching for cities!
+⏳ Loading States – Smooth animations while fetching data
 
-## Usage
+Tech Stack
 
-### Searching for Weather
+Frontend: React 18, JavaScript (ES6+)
 
-1. **Enter a city name** in the search bar (e.g., "Addis Ababa","Nairobi","London", "New York", "Tokyo")
-2. **Press Enter** or click the search button
-3. **View the results** - The dashboard will display comprehensive weather information
-4. **Access recent searches** - Previously searched cities appear as quick-access buttons
+Styling: Tailwind CSS
 
-### Weather Information Displayed
+Icons: Lucide React
 
-- **Current Temperature** - Real-time temperature with "feels like" indicator
-- **Weather Condition** - Description with appropriate weather icon
-- **Humidity Level** - Current humidity percentage
-- **Wind Speed** - Wind speed in meters per second
-- **Atmospheric Pressure** - Current pressure in hPa
-- **Visibility** - Visibility distance in kilometers
-- **Temperature Range** - Daily high and low temperatures
-- **Sun Times** - Sunrise and sunset times for the location
+Build Tool: Vite
+API: OpenWeatherMap
 
-## Project Structure
+Loader Animation: React Loader Spinner
 
-```
 weather-dashboard/
 ├── public/
 │   └── vite.svg
 ├── src/
 │   ├── components/
-│   │   ├── WeatherCard.jsx      # Main weather display component
-│   │   ├── SearchBar.jsx        # City search input component
-│   │   ├── RecentSearches.jsx   # Recent searches display
-│   │   ├── LoadingSpinner.jsx   # Loading state component
-│   │   └── ErrorMessage.jsx     # Error handling component
-│   ├── utils/
-│   │   └── weatherApi.js        # API integration and data fetching
-│   ├── App.jsx                  # Main application component
-│   ├── main.jsx                 # Application entry point
-│   └── index.css                # Global styles and Tailwind imports
-├── index.html                   # HTML template
-├── package.json                 # Dependencies and scripts
-├── tailwind.config.js           # Tailwind CSS configuration
-├── vite.config.js               # Vite build configuration
-└── README.md                    # Project documentation
-```
+│   │   ├── WeatherCard.jsx
+│   │   ├── ForecastCard.jsx
+│   │   ├── SearchBar.jsx
+│   │   ├── RecentSearches.jsx
+│   │   ├── LoadingSpinner.jsx
+│   │   ├── ErrorMessage.jsx
+│   │   ├── UnitToggle.jsx
+│   │   ├── LocationButton.jsx
+│   │   ├── ThemeToggle.jsx
+│   │   └── WeatherAlerts.jsx
+│   ├── Utils/
+│   │   └── WeatherApi.js
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── index.html
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+└── README.md
 
-## API Configuration
 
-### Development Mode
-The application includes mock data for development and testing purposes. This allows you to explore the interface without an API key.
+Getting Started
+Prerequisites
 
-### Production Mode
-To use real weather data:
+Node.js v16+
 
-1. **Get your API key** from [OpenWeatherMap](https://openweathermap.org/api)
-2. **Update the configuration** in `src/utils/weatherApi.js`:
-   ```javascript
-   const API_KEY = 'your-actual-api-key-here';
-   ```
-3. **Uncomment the production function** at the bottom of the file
-4. **Comment out or remove** the mock data function
+npm or yarn
 
-## Building for Production
+OpenWeatherMap API key
 
-1. **Build the application**
-   ```bash
-   npm run build
-   ```
+Installation
 
-2. **Preview the build**
-   ```bash
-   npm run preview
-   ```
+Clone the repository
 
-The built files will be in the `dist/` directory, ready for deployment.
+git clone <repository-url>
+cd weather-dashboard
 
-## Deployment
 
-### Netlify
-1. Connect your repository to Netlify
-2. Set build command: `npm run build`
-3. Set publish directory: `dist`
-4. Deploy!
+Install dependencies
 
-### Vercel
-1. Import your repository to Vercel
-2. Vercel will automatically detect the Vite configuration
-3. Deploy with default settings
+npm install
 
-### Other Platforms
-The application can be deployed to any static hosting service that supports single-page applications.
 
-## Environment Variables
+Create .env file in root and add your API key:
 
-For production deployments, you may want to use environment variables for your API key:
+VITE_OPEN_WEATHER_API_KEY=your-api-key-here
 
-1. **Create a `.env` file** (not included in version control)
-   ```
-   VITE_WEATHER_API_KEY=your-api-key-here
-   ```
 
-2. **Update the API configuration** to use the environment variable:
-   ```javascript
-   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY || 'demo';
-   ```
+Start development server
 
-## Browser Support
+npm run dev
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
 
-## Performance Features
+Open your browser at http://localhost:5173
 
-- **Lazy Loading** - Components load efficiently
-- **Optimized Images** - Weather icons are optimized for fast loading
-- **Minimal Bundle Size** - Only necessary dependencies included
-- **Fast Refresh** - Hot module replacement during development
-- **Responsive Images** - Adaptive image loading for different screen sizes
+Usage
 
-## Contributing
+Search for a city using the search bar or click Use My Location button.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Recent Searches appear below the search bar for quick access.
 
-## License
+Toggle units between Celsius and Fahrenheit with the UnitToggle component.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Switch themes between dark and light with the ThemeToggle component.
 
-## Acknowledgments
+View current weather, 5-day forecast, alerts, humidity, wind, pressure, visibility, and sunrise/sunset times.
+
+API Integration
+
+Uses OpenWeatherMap API for current weather and forecast data.
+
+Handles errors gracefully (invalid city, API failures, geolocation denied).
+
+Recent searches, theme, and units are stored in localStorage.
+
+Deployment
+Netlify
+
+Connect repository
+
+Build command: npm run build
+
+Publish directory: dist
+
+Browser Support
+
+Chrome, Firefox, Safari, Edge (latest versions)
+
+Mobile browsers supported
+
+Contributing
+
+Fork repository
+
+Create a feature branch (git checkout -b feature/my-feature)
+
+Commit your changes (git commit -m "Add feature")
+
+Push branch (git push origin feature/my-feature)
+
+Open a pull request
+
+License
+
+MIT License © 2025
+
+Acknowledgments
 
 - Weather data provided by [OpenWeatherMap](https://openweathermap.org/)
 - Icons by [Lucide](https://lucide.dev/)
 - Built with [Vite](https://vitejs.dev/) and [React](https://reactjs.org/)
 - Styled with [Tailwind CSS](https://tailwindcss.com/)
 
-## Support
+Support
 
 If you encounter any issues or have questions:
 
