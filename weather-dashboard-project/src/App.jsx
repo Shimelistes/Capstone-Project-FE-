@@ -20,22 +20,7 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // Load saved settings on mount
-  useEffect(() => {
-    const savedSearches = localStorage.getItem('recentSearches');
-    const savedTheme = localStorage.getItem('theme');
-    const savedUnits = localStorage.getItem('units');
-
-    if (savedSearches) setRecentSearches(JSON.parse(savedSearches));
-    if (savedTheme) setTheme(savedTheme);
-    if (savedUnits) setUnits(savedUnits);
-  }, []);
-
-  // Load default city weather (London) on mount
-  useEffect(() => {
-    handleSearch('London');
-  }, [handleSearch]); // Include handleSearch in the dependency array
-
+  // ✅ Define handleSearch before using it in useEffect
   const handleSearch = useCallback(
     async (city) => {
       if (!city.trim()) return;
@@ -59,6 +44,22 @@ function App() {
     },
     [units, recentSearches]
   );
+
+  // Load saved settings on mount
+  useEffect(() => {
+    const savedSearches = localStorage.getItem('recentSearches');
+    const savedTheme = localStorage.getItem('theme');
+    const savedUnits = localStorage.getItem('units');
+
+    if (savedSearches) setRecentSearches(JSON.parse(savedSearches));
+    if (savedTheme) setTheme(savedTheme);
+    if (savedUnits) setUnits(savedUnits);
+  }, []);
+
+  // ✅ Now safe to call handleSearch here
+  useEffect(() => {
+    handleSearch('London');
+  }, [handleSearch]);
 
   const handleLocationClick = async () => {
     setLocationLoading(true);
