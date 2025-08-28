@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-export const fetchWeatherData = async (city, units = 'metric') => {
+export const fetchWeatherData = async (city) => {
   const OPEN_WEATHER_API_KEY = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
   try {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPEN_WEATHER_API_KEY}&units=metric`);

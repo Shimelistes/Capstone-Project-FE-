@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import WeatherCard from './components/WeatherCard';
 import ForecastCard from './components/ForecastCard';
 import SearchBar from './components/SearchBar';
@@ -20,51 +20,45 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [locationLoading, setLocationLoading] = useState(false);
 
+  // Load saved settings on mount
   useEffect(() => {
-    // Load recent searches from localStorage
-    const saved = localStorage.getItem('recentSearches');
-    if (saved) {
-      setRecentSearches(JSON.parse(saved));
-    }
-
-    // Load theme from localStorage
+    const savedSearches = localStorage.getItem('recentSearches');
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-
-    // Load units from localStorage
     const savedUnits = localStorage.getItem('units');
-    if (savedUnits) {
-      setUnits(savedUnits);
-    }
+
+    if (savedSearches) setRecentSearches(JSON.parse(savedSearches));
+    if (savedTheme) setTheme(savedTheme);
+    if (savedUnits) setUnits(savedUnits);
   }, []);
 
+  // Load default city weather (London) on mount
   useEffect(() => {
-    // Load default city weather (London)
     handleSearch('London');
-  }, []);
+  }, [handleSearch]); // Include handleSearch in the dependency array
 
-  const handleSearch = async (city) => {
-    if (!city.trim()) return;
+  const handleSearch = useCallback(
+    async (city) => {
+      if (!city.trim()) return;
 
-    setLoading(true);
-    setError(null);
+      setLoading(true);
+      setError(null);
 
-    try {
-      const weatherData = await fetchWeatherData(city, units);
-      setWeather(weatherData);
-      
-      // Update recent searches
-      const updatedSearches = [city, ...recentSearches.filter(s => s !== city)].slice(0, 5);
-      setRecentSearches(updatedSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch weather data');
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        const weatherData = await fetchWeatherData(city, units);
+        setWeather(weatherData);
+
+        // Update recent searches
+        const updatedSearches = [city, ...recentSearches.filter((s) => s !== city)].slice(0, 5);
+        setRecentSearches(updatedSearches);
+        localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
+      } catch (err) {
+        setError(err?.message || 'Failed to fetch weather data');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [units, recentSearches]
+  );
 
   const handleLocationClick = async () => {
     setLocationLoading(true);
@@ -74,30 +68,29 @@ function App() {
       const position = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject, {
           timeout: 10000,
-          enableHighAccuracy: true
+          enableHighAccuracy: true,
         });
       });
 
       const { latitude, longitude } = position.coords;
-      
       const weatherData = await fetchWeatherData(`${latitude},${longitude}`, units);
       setWeather(weatherData);
-      
+
       // Add to recent searches
       const cityName = weatherData.name;
-      const updatedSearches = [cityName, ...recentSearches.filter(s => s !== cityName)].slice(0, 5);
+      const updatedSearches = [cityName, ...recentSearches.filter((s) => s !== cityName)].slice(0, 5);
       setRecentSearches(updatedSearches);
       localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
     } catch (err) {
-      if (err.code === 1) {
-        setError('Location access denied. Please enable location services.');
-      } else if (err.code === 2) {
-        setError('Location unavailable. Please try again.');
-      } else if (err.code === 3) {
-        setError('Location request timed out. Please try again.');
-      } else {
-        setError(err instanceof Error ? err.message : 'Failed to get your location');
-      }
+      const errorMessage =
+        err?.code === 1
+          ? 'Location access denied. Please enable location services.'
+          : err?.code === 2
+          ? 'Location unavailable. Please try again.'
+          : err?.code === 3
+          ? 'Location request timed out. Please try again.'
+          : err?.message || 'Failed to get your location';
+      setError(errorMessage);
     } finally {
       setLocationLoading(false);
     }
@@ -106,7 +99,7 @@ function App() {
   const handleUnitToggle = (newUnits) => {
     setUnits(newUnits);
     localStorage.setItem('units', newUnits);
-    
+
     // Refetch data with new units if we have a current city
     if (weather) {
       handleSearch(weather.name);
@@ -121,22 +114,27 @@ function App() {
 
   const getBackgroundGradient = () => {
     if (!weather) return 'from-blue-400 to-blue-600';
-    
+
     const condition = weather.weather[0].main.toLowerCase();
-    switch (condition) {
-      case 'clear': return 'from-yellow-400 to-orange-500';
-      case 'clouds': return 'from-gray-400 to-gray-600';
-      case 'rain': return 'from-gray-600 to-blue-700';
-      case 'snow': return 'from-blue-200 to-blue-400';
-      case 'thunderstorm': return 'from-gray-700 to-gray-900';
-      default: return 'from-blue-400 to-blue-600';
-    }
+    const gradients = {
+      clear: 'from-yellow-400 to-orange-500',
+      clouds: 'from-gray-400 to-gray-600',
+      rain: 'from-gray-600 to-blue-700',
+      snow: 'from-blue-200 to-blue-400',
+      thunderstorm: 'from-gray-700 to-gray-900',
+    };
+
+    return gradients[condition] || 'from-blue-400 to-blue-600';
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-1000 ${theme === 'light' ? 'light-theme' : ''}`}>
+    <div
+      className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} transition-all duration-1000 ${
+        theme === 'light' ? 'light-theme' : ''
+      }`}
+    >
       <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
-      
+
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -159,19 +157,16 @@ function App() {
               <LocationButton onLocationClick={handleLocationClick} loading={locationLoading} />
             </div>
             {recentSearches.length > 0 && (
-              <RecentSearches 
-                searches={recentSearches} 
-                onSelect={handleSearch}
-              />
+              <RecentSearches searches={recentSearches} onSelect={handleSearch} />
             )}
           </div>
 
           {/* Content */}
           <div className="space-y-6">
             {loading && <LoadingSpinner />}
-            
+
             {error && <ErrorMessage message={error} />}
-            
+
             {weather && !loading && (
               <>
                 <WeatherAlerts alerts={weather.alerts} />
@@ -182,9 +177,7 @@ function App() {
 
           {/* Footer */}
           <div className="text-center mt-12 text-white/60">
-            <p className="text-sm">
-              Weather data provided by OpenWeatherMap
-            </p>
+            <p className="text-sm">Weather data provided by OpenWeatherMap</p>
           </div>
         </div>
       </div>
