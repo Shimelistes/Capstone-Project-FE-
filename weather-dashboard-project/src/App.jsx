@@ -9,7 +9,7 @@ import UnitToggle from './components/UnitToggle';
 import LocationButton from './components/LocationButton';
 import ThemeToggle from './components/ThemeToggle';
 import WeatherAlerts from './components/WeatherAlerts';
-import { fetchWeatherData } from './Utilis/WeatherApi.js';
+import { fetchWeatherData } from './Utils/WeatherApi';
 
 function App() {
   const [weather, setWeather] = useState(null);
