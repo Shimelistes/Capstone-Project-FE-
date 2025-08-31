@@ -84,7 +84,7 @@ Installation
 
 Clone the repository
 
-git clone <repository-url>
+git clone https://github.com/Shimelistes/Capstone-Project-FE-
 cd weather-dashboard
 
 
