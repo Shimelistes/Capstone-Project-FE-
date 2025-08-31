@@ -2,7 +2,7 @@
 
 A beautiful, responsive weather dashboard application built with React and Tailwind CSS that provides real-time weather information for cities worldwide.
 
-![Weather Dashboard]((.weather-dashboard-project\src\assets\Dashbord .png)
+![Weather Dashboard Screenshot](./weather-dashboard-project/src/assets/Dashbord%20.png "Dashboard view")
 
 
 Features
