@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import WeatherCard from './components/WeatherCard';
 import ForecastCard from './components/ForecastCard';
@@ -20,25 +21,26 @@ function App() {
   const [theme, setTheme] = useState('dark');
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // Handle city search
   const handleSearch = useCallback(
-    async (city) => {
-      if (!city.trim()) return;
+    async (cityOrCoords) => {
+      if (!cityOrCoords.trim()) return;
       setLoading(true);
       setError(null);
 
       try {
-        const weatherData = await fetchWeatherData(city, units);
+        const weatherData = await fetchWeatherData(cityOrCoords, units);
+        console.log(weatherData); // Debug
+
         setWeather(weatherData);
 
-        // Update recent searches
+        const cityName = weatherData.name;
         setRecentSearches(prev => {
-          const updated = [city, ...prev.filter(s => s !== city)].slice(0, 5);
+          const updated = [cityName, ...prev.filter(s => s !== cityName)].slice(0, 5);
           localStorage.setItem('recentSearches', JSON.stringify(updated));
           return updated;
         });
-
       } catch (err) {
+        console.error(err);
         setError(err?.message || 'Failed to fetch weather data');
       } finally {
         setLoading(false);
@@ -47,7 +49,6 @@ function App() {
     [units]
   );
 
-  // Load saved settings
   useEffect(() => {
     const savedSearches = localStorage.getItem('recentSearches');
     const savedTheme = localStorage.getItem('theme');
@@ -58,12 +59,10 @@ function App() {
     if (savedUnits) setUnits(savedUnits);
   }, []);
 
-  // Fetch default city on mount
   useEffect(() => {
     handleSearch('Addis Ababa');
   }, [handleSearch]);
 
-  // Handle location button click
   const handleLocationClick = async () => {
     setLocationLoading(true);
     setError(null);
@@ -77,16 +76,7 @@ function App() {
       });
 
       const { latitude, longitude } = position.coords;
-      const weatherData = await fetchWeatherData(`${latitude},${longitude}`, units);
-      setWeather(weatherData);
-
-      const cityName = weatherData.name;
-      setRecentSearches(prev => {
-        const updated = [cityName, ...prev.filter(s => s !== cityName)].slice(0, 5);
-        localStorage.setItem('recentSearches', JSON.stringify(updated));
-        return updated;
-      });
-
+      await handleSearch(`${latitude},${longitude}`);
     } catch (err) {
       const errorMessage =
         err?.code === 1
@@ -102,24 +92,20 @@ function App() {
     }
   };
 
-  // Toggle units (°C / °F)
   const handleUnitToggle = (newUnits) => {
     setUnits(newUnits);
     localStorage.setItem('units', newUnits);
     if (weather) handleSearch(weather.name);
   };
 
-  // Toggle theme (light / dark)
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
 
-  // Background gradient based on weather
   const getBackgroundGradient = () => {
     if (!weather) return 'from-blue-400 to-blue-600';
-
     const condition = weather.weather[0].main.toLowerCase();
     const gradients = {
       clear: 'from-yellow-400 to-orange-500',
@@ -128,7 +114,6 @@ function App() {
       snow: 'from-blue-200 to-blue-400',
       thunderstorm: 'from-gray-700 to-gray-900',
     };
-
     return gradients[condition] || 'from-blue-400 to-blue-600';
   };
 
@@ -139,7 +124,6 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
 
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
               Weather Dashboard
@@ -147,10 +131,8 @@ function App() {
             <p className="text-white/80 text-lg">Get real-time weather information for any city worldwide</p>
           </div>
 
-          {/* Unit Toggle */}
           <UnitToggle units={units} onToggle={handleUnitToggle} />
 
-          {/* Search Section */}
           <div className="mb-8">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-center mb-4">
               <SearchBar onSearch={handleSearch} />
@@ -159,7 +141,6 @@ function App() {
             {recentSearches.length > 0 && <RecentSearches searches={recentSearches} onSelect={handleSearch} />}
           </div>
 
-          {/* Content */}
           <div className="space-y-6">
             {loading && (
               <div className="flex items-center justify-center">
@@ -178,7 +159,6 @@ function App() {
             )}
           </div>
 
-          {/* Footer */}
           <div className="text-center mt-12 text-white/60">
             <p className="text-sm">Weather data provided by OpenWeatherMap</p>
           </div>

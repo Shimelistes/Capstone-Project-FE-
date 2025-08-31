@@ -3,7 +3,9 @@ welcome to Capstone-project which is weather-dashboard-project
 
 A beautiful, responsive weather dashboard application built with React and Tailwind CSS that provides real-time weather information for cities worldwide.
 
-![Weather Dashboard](https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1200&h=600&fit=crop)
+![Weather Dashboard]
+
+![Weather Dashboard Screenshot](./weather-dashboard-project/src/assets/Dashbord%20.png "Dashboard view")
 
 
 Features
